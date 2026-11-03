@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}My Library · MovieShelf{% endblock %}
+{% block content %}
+<section class="hero">
+  <div><p class="eyebrow">YOUR PRIVATE CINEMA</p><h1>Your movie world,<br><span>beautifully organized.</span></h1>
+  <p class="muted">Keep track of what you've watched and what you want to watch next.</p></div>
+  <a class="button" href="{{ url_for('add_movie') }}">＋ Add a movie</a>
+</section>
+<section class="stats">
+  <article class="stat"><span class="stat-label">IN YOUR LIBRARY</span><strong>{{ stats.total or 0 }}</strong><span class="muted">movies saved</span></article>
+  <article class="stat"><span class="stat-label">WATCHED</span><strong>{{ stats.watched or 0 }}</strong><span class="muted">movies completed</span></article>
+  <article class="stat"><span class="stat-label">YOUR AVERAGE RATING</span><strong>{{ stats.average_rating if stats.average_rating is not none else "—" }}</strong><span class="muted">out of 10</span></article>
+</section>
+<section class="library-heading"><div><p class="eyebrow">COLLECTION</p><h2>My library</h2></div><span class="muted">{{ movies|length }} result(s)</span></section>
+<form class="filters" method="get">
+  <input name="q" value="{{ search }}" placeholder="Search movie titles…" aria-label="Search movie titles">
+  <select name="genre"><option value="">All genres</option>{% for item in genres %}<option value="{{ item }}" {% if selected_genre == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select>
+  <select name="status"><option value="">All statuses</option>{% for item in statuses %}<option value="{{ item }}" {% if selected_status == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select>
+  <button class="button button-small" type="submit">Filter</button><a class="clear-link" href="{{ url_for('index') }}">Clear</a>
+</form>
+{% if movies %}
+<div class="movie-grid">
+  {% for movie in movies %}
+  <article class="movie-card">
+    <div class="poster-placeholder"><span>▶</span><small>{{ movie.genre }}</small></div>
+    <div class="movie-info">
+      <div class="movie-title-row"><h3>{{ movie.title }}</h3><span class="rating">★ {{ "%.1f"|format(movie.rating) }}</span></div>
+      <p class="muted">{{ movie.year }} · {{ movie.genre }}</p>
+      <span class="status status-{{ movie.status|lower|replace(' ', '-') }}">{{ movie.status }}</span>
+      <a class="card-link" href="{{ url_for('movie_detail', movie_id=movie.id) }}">View details →</a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty"><div class="empty-icon">✦</div><h3>Your library is ready for its first movie.</h3><p class="muted">Add a movie to start building your collection.</p><a class="button" href="{{ url_for('add_movie') }}">Add your first movie</a></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ "Edit movie" if movie.get("id") else "Add movie" }} · MovieShelf{% endblock %}
+{% block content %}
+<div class="form-wrap">
+  <p class="eyebrow">YOUR COLLECTION</p><h1>{{ "Edit movie" if movie.get("id") else "Add a movie" }}</h1>
+  <p class="muted">Save the details so you can find this movie later.</p>
+  <form class="movie-form" method="post">
+    <label>Movie title<input name="title" maxlength="120" required value="{{ movie.get('title', '') }}" placeholder="e.g. The Grand Budapest Hotel"></label>
+    <div class="form-row">
+      <label>Release year<input name="year" type="number" min="1888" max="2100" required value="{{ movie.get('year', '') }}" placeholder="2024"></label>
+      <label>Genre<select name="genre" required><option value="">Choose genre</option>{% for item in genres %}<option value="{{ item }}" {% if movie.get('genre') == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select></label>
+    </div>
+    <div class="form-row">
+      <label>Your rating (0–10)<input name="rating" type="number" min="0" max="10" step="0.1" value="{{ movie.get('rating', 0) }}"></label>
+      <label>Watch status<select name="status">{% for item in statuses %}<option value="{{ item }}" {% if movie.get('status', 'Want to Watch') == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select></label>
+    </div>
+    <label>Notes<textarea name="notes" rows="4" placeholder="Your thoughts, favourite scenes, who recommended it…">{{ movie.get('notes', '') }}</textarea></label>
+    <div class="form-actions"><button class="button" type="submit">Save movie</button><a class="clear-link" href="{{ url_for('index') }}">Cancel</a></div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ movie.title }} · MovieShelf{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('index') }}">← Back to library</a>
+<section class="detail-panel">
+  <div class="detail-poster"><span>▶</span><small>{{ movie.genre }}</small></div>
+  <div class="detail-copy">
+    <p class="eyebrow">MOVIE DETAILS</p><h1>{{ movie.title }}</h1>
+    <p class="muted">{{ movie.year }} · {{ movie.genre }}</p>
+    <p class="detail-rating">★ {{ "%.1f"|format(movie.rating) }} <span class="muted">/ 10</span></p>
+    <span class="status status-{{ movie.status|lower|replace(' ', '-') }}">{{ movie.status }}</span>
+    <h3>Your notes</h3><p class="notes">{{ movie.notes or "No notes added yet." }}</p>
+    <div class="form-actions"><a class="button" href="{{ url_for('edit_movie', movie_id=movie.id) }}">Edit movie</a>
+      <form method="post" action="{{ url_for('delete_movie', movie_id=movie.id) }}" onsubmit="return confirm('Delete this movie from your library?')"><button class="button button-danger" type="submit">Delete</button></form>
+    </div>
+  </div>
+</section>
+{% endblock %}
